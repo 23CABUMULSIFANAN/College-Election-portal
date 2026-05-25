@@ -1,0 +1,8 @@
+.nav{
+    background: linear-gradient(135deg, #1E3A8A, #0F172A);
+    color: white;
+    padding: 20px;
+   display: flex;
+   justify-content: center;
+   
+}
