@@ -1,13 +1,13 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.conf import settings
 from .models import Student, OTP
-from .serializers import StudentSerializer
 import random
+import os
 from django.utils import timezone
 from datetime import timedelta
-from django.core.mail import send_mail
 from django.contrib.auth import authenticate
+from .serializers import StudentSerializer
+import resend
 
 
 @api_view(['GET'])
@@ -26,10 +26,7 @@ def generate_otp(request):
     email = request.data.get('email')
 
     if not roll_no or not email:
-        return Response(
-            {"error": "Roll number and Email ID is required"},
-            status=400
-        )
+        return Response({"error": "Roll number and Email ID is required"}, status=400)
 
     try:
         student = Student.objects.get(roll_no=roll_no, email=email)
@@ -41,7 +38,6 @@ def generate_otp(request):
     otp = random.randint(100000, 999999)
 
     OTP.objects.filter(student=student, is_used=False).delete()
-
     expiry_time = timezone.now() + timedelta(minutes=5)
     OTP.objects.create(
         student=student,
@@ -49,22 +45,21 @@ def generate_otp(request):
         expires_at=expiry_time
     )
 
-    # Send email — non-blocking, won't crash if it fails
     try:
-        send_mail(
-            subject="Voting System OTP",
-            message=f"Your OTP for College Election Portal is: {otp}\n\nThis OTP expires in 5 minutes.\nDo not share this with anyone.",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=True,
-        )
+        resend.api_key = os.environ.get("RESEND_API_KEY")
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": email,
+            "subject": "Voting System OTP",
+            "text": f"Your OTP for College Election Portal is: {otp}\n\nExpires in 5 minutes. Do not share this with anyone."
+        })
         print(f"OTP email sent to {email}")
     except Exception as e:
         print(f"Email error: {str(e)}")
 
     return Response({
         "message": "OTP sent successfully",
-        "otp": str(otp)  # remove this line after testing
+        "otp": str(otp)
     })
 
 
@@ -74,10 +69,7 @@ def verify_otp(request):
     otp = request.data.get('otp')
 
     if not roll_no or not otp:
-        return Response(
-            {"error": "Roll number and OTP required"},
-            status=400
-        )
+        return Response({"error": "Roll number and OTP required"}, status=400)
 
     try:
         student = Student.objects.get(roll_no=roll_no)
