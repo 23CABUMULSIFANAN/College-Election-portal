@@ -25,9 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-oc23@rye#ve%21+sn62ki**6$grl8t2-#6x--8rsvow9+*zr5e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     "college-election-api.onrender.com",
+    '*'
 ]
 
 # Application definition
