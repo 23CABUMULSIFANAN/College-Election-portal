@@ -45,16 +45,26 @@ def generate_otp(request):
     expires_at=expiry_time
 )
     print("Generated OTP",otp)
-    send_mail(
-        subject="Voting System OTP",
-        message=f"Your OTP is {otp}",
-        from_email="umulsifananasarali@gmail.com",
-        recipient_list=[student.email],
-        fail_silently=False,
-    )
+    # send_mail(
+    #     subject="Voting System OTP",
+    #     message=f"Your OTP is {otp}",
+    #     from_email="umulsifananasarali@gmail.com",
+    #     recipient_list=[student.email],
+    #     fail_silently=False,
+    # )
     return Response(
         {"message":"OTP generated successfully"}
     ) 
+try:
+    send_mail(
+        subject="Voting System OTP",
+        message=f"Your OTP is {otp}",
+        from_email="yourgmail@gmail.com",
+        recipient_list=[student.email],
+        fail_silently=False,
+    )
+except Exception as e:
+    print("Email failed:", e)
     
 
 @api_view(['POST'])
