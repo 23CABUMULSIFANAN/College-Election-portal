@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-oc23@rye#ve%21+sn62ki**6$grl8t2-#6x--8rsvow9+*zr5e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
+DEBUG = False
+ALLOWED_HOSTS = [
+    "college-election-api.onrender.com",
+]
 
 # Application definition
 
@@ -83,11 +83,11 @@ WSGI_APPLICATION = 'Election.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'collegeelection',
-        'HOST':'localhost',
-        'PORT':'3306',
-        'USER':'root',
-        'PASSWORD':'sifanasheeju1@'
+        'NAME': 'defaultdb',
+        'HOST':'mysql-3195c8b8-umulsifananasarali-a469.b.aivencloud.com',
+        'PORT':'18149',
+        'USER':'avnadmin',
+        'PASSWORD':'dummy_password'
     }
 }
 
@@ -128,9 +128,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOWED_ORIGINS=[
-    "http://localhost:3000"
+CORS_ALLOWED_ORIGINS = [
+    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app"
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app"
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -138,7 +144,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
 EMAIL_HOST_USER = 'umulsifananasarali@gmail.com'
-EMAIL_HOST_PASSWORD = 'izoejnqqmlynxuba'
+EMAIL_HOST_PASSWORD = 'dummy_password'
 
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
