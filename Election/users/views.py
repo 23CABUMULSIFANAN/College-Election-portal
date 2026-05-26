@@ -17,55 +17,49 @@ def Stuent_List(request):
 
 @api_view(['POST'])
 def generate_otp(request):
-    roll_no=request.data.get('roll_no')
-    email= request.data.get('email')
+    roll_no = request.data.get('roll_no')
+    email = request.data.get('email')
+
     if not roll_no or not email:
         return Response(
-            {"error":"Roll number and Email ID is Required"},status=400
+            {"error": "Roll number and Email ID is Required"},
+            status=400
         )
-    
+
     try:
-       student=Student.objects.get(roll_no=roll_no,email=email) 
-    except:
-        return Response(
-            {"error":"Student Not Found"},status=400
-        )
-  
-    otp=random.randint(100000,999999)
-    OTP.objects.filter(
-    student=student,
-    is_used=False
-).delete()
+        student = Student.objects.get(roll_no=roll_no, email=email)
+    except Student.DoesNotExist:
+        return Response({"error": "Student Not Found"}, status=400)
+
+    otp = random.randint(100000, 999999)
+
+    OTP.objects.filter(student=student, is_used=False).delete()
 
     expiry_time = timezone.now() + timedelta(minutes=5)
 
     OTP.objects.create(
-    student=student,
-    otp_code=str(otp),
-    expires_at=expiry_time
-)
-    print("Generated OTP",otp)
-    # send_mail(
-    #     subject="Voting System OTP",
-    #     message=f"Your OTP is {otp}",
-    #     from_email="umulsifananasarali@gmail.com",
-    #     recipient_list=[student.email],
-    #     fail_silently=False,
-    # )
-    return Response(
-        {"message":"OTP generated successfully"}
-    ) 
-try:
-    send_mail(
-        subject="Voting System OTP",
-        message=f"Your OTP is {otp}",
-        from_email="yourgmail@gmail.com",
-        recipient_list=[student.email],
-        fail_silently=False,
+        student=student,
+        otp_code=str(otp),
+        expires_at=expiry_time
     )
-except Exception as e:
-    print("Email failed:", e)
-    
+
+    print("Generated OTP:", otp)
+
+    # SAFE EMAIL BLOCK
+    try:
+        send_mail(
+            subject="Voting System OTP",
+            message=f"Your OTP is {otp}",
+            from_email="yourgmail@gmail.com",
+            recipient_list=[student.email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print("Email failed:", e)
+
+    return Response({
+        "message": "OTP generated successfully"
+    })
 
 @api_view(['POST'])
 def verify_otp(request):
