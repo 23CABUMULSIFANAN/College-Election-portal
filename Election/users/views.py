@@ -60,10 +60,10 @@ def generate_otp(request):
     try:
         send_mail(
             subject="Voting System OTP",
-            message=f"Your OTP is {otp}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[student.email],
-            fail_silently=False,
+    message=f"Your OTP is {otp}",
+    from_email=settings.EMAIL_HOST_USER,
+    recipient_list=[email],
+    fail_silently=False,
         )
     except Exception as e:
         print("Email failed:", e)
@@ -72,7 +72,6 @@ def generate_otp(request):
     return Response({
         "message": "OTP sent successfully"
     })
-
 
 # -------------------------
 # VERIFY OTP
