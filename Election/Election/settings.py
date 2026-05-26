@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-oc23@rye#ve%21+sn62ki**6$grl8t2-#6x--8rsvow9+*zr5e
 DEBUG = True
 ALLOWED_HOSTS = [
     "college-election-api.onrender.com",
+    "college-election-portal.onrender.com",
     '*'
 ]
 
