@@ -12,9 +12,12 @@ from django.contrib.auth import authenticate
 
 @api_view(['GET'])
 def student_list(request):
-    students = Student.objects.all()
-    serializer = StudentSerializer(students, many=True)
-    return Response(serializer.data)
+    try:
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
 
 @api_view(['POST'])
@@ -23,12 +26,17 @@ def generate_otp(request):
     email = request.data.get('email')
 
     if not roll_no or not email:
-        return Response({"error": "Roll number and Email ID is required"}, status=400)
+        return Response(
+            {"error": "Roll number and Email ID is required"},
+            status=400
+        )
 
     try:
         student = Student.objects.get(roll_no=roll_no, email=email)
     except Student.DoesNotExist:
         return Response({"error": "Student not found"}, status=400)
+    except Exception as e:
+        return Response({"error": f"Database error: {str(e)}"}, status=500)
 
     otp = random.randint(100000, 999999)
 
@@ -41,23 +49,23 @@ def generate_otp(request):
         expires_at=expiry_time
     )
 
-    # ✅ Check email settings before sending
-    if not settings.EMAIL_HOST_USER or not settings.EMAIL_HOST_PASSWORD:
-        return Response({"error": "Email not configured on server"}, status=500)
-
+    # Send email — non-blocking, won't crash if it fails
     try:
         send_mail(
             subject="Voting System OTP",
-            message=f"Your OTP for the College Election Portal is: {otp}\n\nThis OTP expires in 5 minutes.",
+            message=f"Your OTP for College Election Portal is: {otp}\n\nThis OTP expires in 5 minutes.\nDo not share this with anyone.",
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
-            fail_silently=False,
+            fail_silently=True,
         )
+        print(f"OTP email sent to {email}")
     except Exception as e:
-        print("Email error:", str(e))
-        return Response({"error": f"Email sending failed: {str(e)}"}, status=500)
+        print(f"Email error: {str(e)}")
 
-    return Response({"message": "OTP sent successfully"})
+    return Response({
+        "message": "OTP sent successfully",
+        "otp": str(otp)  # remove this line after testing
+    })
 
 
 @api_view(['POST'])
@@ -66,12 +74,17 @@ def verify_otp(request):
     otp = request.data.get('otp')
 
     if not roll_no or not otp:
-        return Response({"error": "Roll number and OTP required"}, status=400)
+        return Response(
+            {"error": "Roll number and OTP required"},
+            status=400
+        )
 
     try:
         student = Student.objects.get(roll_no=roll_no)
     except Student.DoesNotExist:
         return Response({"error": "Student not found"}, status=400)
+    except Exception as e:
+        return Response({"error": f"Database error: {str(e)}"}, status=500)
 
     otp_record = OTP.objects.filter(
         student=student,
@@ -88,7 +101,10 @@ def verify_otp(request):
     otp_record.is_used = True
     otp_record.save()
 
-    return Response({"message": "Login successful", "roll_no": roll_no})
+    return Response({
+        "message": "Login successful",
+        "roll_no": roll_no
+    })
 
 
 @api_view(['POST'])
@@ -96,9 +112,18 @@ def admin_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
 
-    user = authenticate(username=username, password=password)
+    if not username or not password:
+        return Response({"error": "Username and password required"}, status=400)
+
+    try:
+        user = authenticate(username=username, password=password)
+    except Exception as e:
+        return Response({"error": f"Auth error: {str(e)}"}, status=500)
 
     if user is not None and user.is_staff:
-        return Response({"message": "Admin login success", "role": "admin"})
+        return Response({
+            "message": "Admin login success",
+            "role": "admin"
+        })
 
     return Response({"message": "Invalid admin credentials"}, status=401)

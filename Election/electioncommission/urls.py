@@ -9,9 +9,9 @@ urlpatterns = [
     path("positions/", position_list),
     path("candidates/", candidate_list),
     path("vote/", vote_cast),
-    path("results/", election_results),        # ✅ one results route
-    path("results/status/", results_status),   # ✅ specific routes first
+    path("results/status/", results_status),
     path("results/toggle/", toggle_results),
+    path("results/", election_results),
     path("winners/", winners),
     path("candidates/<int:id>/", delete_candidate),
 ]
