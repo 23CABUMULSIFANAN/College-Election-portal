@@ -143,21 +143,12 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
+CORS_ALLOWED_ORIGINS = [
+    "https://college-election-portal-rho.vercel.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://college-election-portal-rho.vercel.app",
-    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
