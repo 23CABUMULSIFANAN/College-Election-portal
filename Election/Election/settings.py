@@ -131,11 +131,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app"
+    "https://college-election-portal-rho.vercel.app",
+    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app",  # keep old just in case
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app"
+    "https://college-election-portal-rho.vercel.app",
+    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
