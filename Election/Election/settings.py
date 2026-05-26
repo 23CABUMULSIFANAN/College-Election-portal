@@ -131,9 +131,27 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOWED_ORIGINS = [
-    "https://college-election-portal-rho.vercel.app",
-    "https://college-election-portal-j4cjmu8xn-sifanas-projects.vercel.app",  # keep old just in case
+CORS_ALLOW_ALL_ORIGINS = True  # temporary to test
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
