@@ -84,18 +84,19 @@ WSGI_APPLICATION = 'Election.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
+import os
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'defaultdb',
-        'HOST':'mysql-3195c8b8-umulsifananasarali-a469.b.aivencloud.com',
-        'PORT':'18149',
-        'USER':'avnadmin',
-        'PASSWORD':'dummy_password'
+        'NAME': os.environ.get('DB_NAME', 'defaultdb'),
+        'HOST': os.environ.get('DB_HOST', 'mysql-3195c8b8-umulsifananasarali-a469.b.aivencloud.com'),
+        'PORT': os.environ.get('DB_PORT', '18149'),
+        'USER': os.environ.get('DB_USER', 'avnadmin'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

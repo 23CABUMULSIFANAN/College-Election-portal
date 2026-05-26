@@ -7,4 +7,4 @@ PyMySQL==1.1.1
 packaging==26.2
 sqlparse==0.5.5
 tzdata==2026.2
-
+cryptography==42.0.8
