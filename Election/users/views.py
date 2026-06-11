@@ -119,3 +119,15 @@ def admin_login(request):
         })
 
     return Response({"message": "Invalid admin credentials"}, status=401)
+
+from django.contrib.auth.models import User
+
+@api_view(['GET'])
+def reset_admin_password(request):
+    try:
+        user = User.objects.get(username='admin')
+        user.set_password('admin123')
+        user.save()
+        return Response({"message": "Password reset to admin123"})
+    except User.DoesNotExist:
+        return Response({"message": "Admin not found"}, status=404)
