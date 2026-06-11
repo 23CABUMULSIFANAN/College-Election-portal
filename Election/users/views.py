@@ -131,3 +131,20 @@ def reset_admin_password(request):
         return Response({"message": "Password reset to admin123"})
     except User.DoesNotExist:
         return Response({"message": "Admin not found"}, status=404)
+@api_view(['GET'])
+def create_admin(request):
+    try:
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser(
+                username='admin',
+                password='admin123',
+                email='umulsifananasarali@gmail.com'
+            )
+            return Response({"message": "Admin created successfully"})
+        else:
+            user = User.objects.get(username='admin')
+            user.set_password('admin123')
+            user.save()
+            return Response({"message": "Admin password reset to admin123"})
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

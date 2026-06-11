@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import student_list, generate_otp, verify_otp, admin_login, reset_admin_password
+from .views import student_list, generate_otp, verify_otp, admin_login,create_admin, reset_admin_password
 
 urlpatterns = [
     path("student/", student_list),
@@ -7,4 +7,5 @@ urlpatterns = [
     path("verify_otp/", verify_otp),
     path("admin-login/", admin_login),
     path("reset_admin/", reset_admin_password),
+    path("create_admin/", create_admin),
 ]
