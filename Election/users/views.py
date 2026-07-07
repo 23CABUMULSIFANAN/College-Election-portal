@@ -59,7 +59,7 @@ def generate_otp(request):
 
     return Response({
         "message": "OTP sent successfully",
-        "otp": str(otp)
+       
     })
 
 
